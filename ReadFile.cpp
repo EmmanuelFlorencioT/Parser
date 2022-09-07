@@ -13,11 +13,19 @@ class Vertex{
     Vertex(){
         x = y = z = 0;
     }
-    Vertex(vector<float> c){
-        if(c.size() == 3){
-            x = c[0];
-            y = c[1];
-            z = c[2];
+    void setVertexLoc(float data, int axis){
+        switch (axis){
+        case 0:
+            x = data;
+            break;
+        case 1:
+            y = data;
+            break;
+        case 2:
+            z = data;
+            break;
+        default:
+            break;
         }
     }
     void checkLocation(){
@@ -27,14 +35,17 @@ class Vertex{
     }
 };
 
-// void getRidHeader(fstream &file){
-//     string trsh;
+class SquareFace{
+    private:
+        Vertex a, b, c, d;
+};
 
-//     for(int i = 0; i < 3; i++)
-//         getline(file, trsh);
-// }
+class TriangleFace{
+    private:
+        Vertex a, b, c;
+};
 
-void getCoords(string line, vector<float> &coords){
+void getCoords(string line, Vertex &v){
     int begin = 2, j;
     string buff;
 
@@ -42,7 +53,7 @@ void getCoords(string line, vector<float> &coords){
         for(j = begin; (line[j] != ' ' && j < line.size()); j++){
             buff+=line[j];
         }
-        coords.push_back(stof(buff));
+        v.setVertexLoc(stof(buff), i);
         buff.clear();
         begin = j + 1;
     }
@@ -51,19 +62,15 @@ void getCoords(string line, vector<float> &coords){
 int main(){
     fstream myFile;
     myFile.open("Cubo.obj", ios::in);
-    vector <float> sepCoords; //Separate Coords
     vector <Vertex> vertices;
-
-    // getRidHeader(myFile);
 
     if(myFile.is_open()){
         string s;
         while(getline(myFile, s)){
             if(s[0] == 'v'){
-                getCoords(s, sepCoords);
-                Vertex v(sepCoords);
-                vertices.push_back(v);
-                sepCoords.clear();
+                Vertex temp;
+                getCoords(s, temp);
+                vertices.push_back(temp);
             }
         }
 
