@@ -64,7 +64,7 @@ void readVertexCoords(string line, Vertex &v){
     }
 }
 
-void readFaceVertices(string line, vector<int> &index){
+void readFaceVertices(string line, vector<int> &index, int offset){
     int begin = 2, j;
     string buff;
 
@@ -72,7 +72,7 @@ void readFaceVertices(string line, vector<int> &index){
         for(j = begin; (line[j] != ' ' && j < line.size()); j++){
             buff+=line[j];
         }
-        index.push_back(stoi(buff)-1);
+        index.push_back(stoi(buff)-1-offset);
         buff.clear();
         begin = j + 1;
     }
@@ -98,6 +98,7 @@ int main(){
     Object objAux;
     vector <Object> obj;
     bool notFirst = false; //Dismiss the first 'o' from the file
+    int offset = 0, cont = 0; //Offset of multiple obj vertices in files
 
     obj.clear();
 
@@ -108,12 +109,13 @@ int main(){
                 Vertex tempV;
                 readVertexCoords(s, tempV);
                 objAux.vertices.push_back(tempV);
+                cont++;
             }
             if(s[0] == 'f'){
                 vector <int> indices;
                 Face tempF;
-                readFaceVertices(s, indices);
-                // printRealIndex(indices);
+                readFaceVertices(s, indices, offset);
+                //printRealIndex(indices);
                 pairFaceVertices(objAux.vertices, indices, tempF);
                 objAux.faces.push_back(tempF);
             }
@@ -127,6 +129,8 @@ int main(){
                     objAux.vertices.clear();
                 } else
                     notFirst = true;
+
+                offset = cont;
             }
         }
         obj.push_back(objAux); //Save last object in the file
