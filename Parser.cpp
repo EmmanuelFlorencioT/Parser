@@ -94,7 +94,7 @@ void pairFaceVertices(vector<Vertex> ver, vector<int> index, Face &f){
 
 int main(){
     fstream myFile;
-    myFile.open("CuboMultiObj.obj", ios::in);
+    myFile.open("Golf.obj", ios::in);
     Object objAux;
     vector <Object> obj;
     bool notFirst = false; //Dismiss the first 'o' from the file
